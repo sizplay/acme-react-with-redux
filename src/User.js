@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import store, { updateUserText } from './store';
+import store, { updateUserText, updateUserThunk } from './store';
 
 class User extends Component {
 
@@ -7,6 +7,7 @@ class User extends Component {
     super();
     this.state = store.getState().users;
     this.onChangeName = this.onChangeName.bind(this);
+    this.onSubmitName = this.onSubmitName.bind(this);
   }
 
   componentWillUnmount () {
@@ -23,16 +24,24 @@ class User extends Component {
     store.dispatch(action);
   }
 
+  onSubmitName(ev) {
+    ev.preventDefault();
+    const name = this.state.name;
+    const id = Number(window.location.href.charAt(window.location.href.length - 1));
+    const postUserThunk = updateUserThunk(id, name);
+    store.dispatch(postUserThunk);
+  }
+
   render() {
     const { users } = this.state;
     const id = Number(window.location.href.charAt(window.location.href.length-1));
     const user = users.find( user => user.id === id);
-    const { onChangeName } = this;
+    const { onChangeName, onSubmitName } = this;
 
     return (
       <div className = 'row'>
         <h4>Hello { user.name } </h4>
-        <form>
+        <form onSubmit = { onSubmitName }>
           <div className = 'col-lg-4'>
             <div className = 'input-group'>
               <span className = 'input-group-btn'>

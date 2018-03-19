@@ -83,9 +83,9 @@ export function postUser(name) {
   };
 }
 
-export function updateUserThunk(name) {
+export function updateUserThunk(id, name) {
   return function thunk(dispatch, getState) {
-    axios.put('/api/users', name)
+    axios.put(`/api/users/${id}`, name)
       .then(res => res.data)
       .then(name => {
         store.dispatch(updateUser(name));
